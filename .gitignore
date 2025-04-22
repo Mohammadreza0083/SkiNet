@@ -1,1 +1,62 @@
+# .NET
+bin/
+obj/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+.vs/
+*.swp
+*.*~
+project.lock.json
+.DS_Store
+*.pyc
+nupkg/
+
+# Angular
+dist/
+tmp/
+.angular/
+node_modules/
+npm-debug.log
+yarn-error.log
+coverage/
+*.log
+
+# API Configuration
 API/appsettings.Development.json
+API/appsettings.json
+
+# Rider
+.idea/
+*.sln.iml
+*.csproj.iml
+*.DotSettings.user
+*.DotSettings
+_ReSharper*/
+*.ReSharper
+*.DotSettings.user
+*.DotSettings
+*.sln.DotSettings
+*.sln.DotSettings.user
+
+# WebStorm
+.idea/
+*.iml
+*.iws
+*.ipr
+.idea_modules/
+.idea/workspace.xml
+.idea/tasks.xml
+.idea/dictionaries
+.idea/vcs.xml
+.idea/jsLibraryMappings.xml
+.idea/webServers.xml
+.idea/dataSources.ids
+.idea/dataSources.xml
+.idea/sqlDataSources.xml
+.idea/dynamic.xml
+.idea/uiDesigner.xml
+.idea/deployment.xml
+.idea/markdown-navigator.xml
+.idea/markdown-navigator/
