@@ -168,3 +168,6 @@ C:\Users\Mohammadreza\Documents\SkiNet\API\bin\Debug\net9.0\runtimes\win\lib\net
 C:\Users\Mohammadreza\Documents\SkiNet\API\bin\Debug\net9.0\runtimes\win\lib\net6.0\System.Security.Cryptography.ProtectedData.dll
 C:\Users\Mohammadreza\Documents\SkiNet\API\bin\Debug\net9.0\runtimes\win\lib\net6.0\System.Windows.Extensions.dll
 C:\Users\Mohammadreza\Documents\SkiNet\API\obj\Debug\net9.0\API.sourcelink.json
+C:\Users\Mohammadreza\Documents\SkiNet\API\bin\Debug\net9.0\Swashbuckle.AspNetCore.Swagger.dll
+C:\Users\Mohammadreza\Documents\SkiNet\API\bin\Debug\net9.0\Swashbuckle.AspNetCore.SwaggerGen.dll
+C:\Users\Mohammadreza\Documents\SkiNet\API\bin\Debug\net9.0\Swashbuckle.AspNetCore.SwaggerUI.dll
