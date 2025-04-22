@@ -60,3 +60,4 @@ _ReSharper*/
 .idea/deployment.xml
 .idea/markdown-navigator.xml
 .idea/markdown-navigator/
+API/appsettings.Development.json
