@@ -1,16 +1,11 @@
 using API.Extensions;
-using Infrastructure.Data;
-using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+// Configure application services
+// Add custom application services (database, authentication, etc.)
+builder.Services.AddApplicationServices(builder.Configuration);
 
-builder.Services.AddControllers();
-builder.Services.AddDbContext<StoreContext>(opt =>
-{
-    opt.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
-});
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 SwaggerServiceExtensions.AddOpenApi(builder.Services);
 
