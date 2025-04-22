@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers;
 
-public class ProductsApiControllers(IUnitOfWork unitOfWork) : BaseApiController
+public class ProductsController(IUnitOfWork unitOfWork) : BaseApiController
 {
     [HttpGet]
     public async Task<ActionResult<IEnumerable<Product>>> GetProducts()
@@ -22,5 +22,15 @@ public class ProductsApiControllers(IUnitOfWork unitOfWork) : BaseApiController
         var product = await unitOfWork.ProductsRepository.GetProductByIdAsync(id);
         return Ok(product);
     }
-    
+
+    [HttpPost]
+    public async Task<ActionResult<Product>> CreateProduct(Product product)
+    {
+        await unitOfWork.ProductsRepository.CreateProductAsync(product);
+        if (await unitOfWork.Complete())
+        {
+            return CreatedAtAction(nameof(GetProduct), new { id = product.Id }, product);
+        }
+        return BadRequest("Failed to create product");
+    }
 }
