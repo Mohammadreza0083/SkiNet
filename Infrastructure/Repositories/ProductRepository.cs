@@ -31,4 +31,18 @@ public class ProductRepository(StoreContext context) : IProductRepository
         await context.Products.AddAsync(product);
         return product;
     }
+
+    public void UpdateProduct(Product product)
+    {
+        context.Entry(product).State = EntityState.Modified;
+    }
+
+    public void DeleteProduct(Product product)
+    {
+        if (product == null)
+        {
+            throw new ArgumentNullException(nameof(product), "Product cannot be null");
+        }
+        context.Products.Remove(product);
+    }
 }

@@ -33,4 +33,29 @@ public class ProductsController(IUnitOfWork unitOfWork) : BaseApiController
         }
         return BadRequest("Failed to create product");
     }
+    [HttpPut("{id:int}")]
+    public async Task<ActionResult> UpdateProduct(int id, Product product)
+    {
+        if (id != product.Id)
+        {
+            return BadRequest("Product ID mismatch");
+        }
+        unitOfWork.ProductsRepository.UpdateProduct(product);
+        if (await unitOfWork.Complete())
+        {
+            return NoContent();
+        }
+        return BadRequest("Failed to update product");
+    }
+    [HttpDelete("{id:int}")]
+    public async Task<ActionResult> DeleteProduct(int id)
+    {
+        var product = await unitOfWork.ProductsRepository.GetProductByIdAsync(id);
+        unitOfWork.ProductsRepository.DeleteProduct(product);
+        if (await unitOfWork.Complete())
+        {
+            return NoContent();
+        }
+        return BadRequest("Failed to delete product");
+    }
 }
