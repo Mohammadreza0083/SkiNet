@@ -7,7 +7,7 @@ namespace API.Controllers;
 public class ProductsController(IUnitOfWork unitOfWork) : BaseApiController
 {
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<Product>>> GetProducts()
+    public async Task<ActionResult<IReadOnlyList<Product>>> GetProducts()
     {
         var products = await unitOfWork.ProductsRepository.GetProductsAsync();
         if (!products.Any())
@@ -57,5 +57,25 @@ public class ProductsController(IUnitOfWork unitOfWork) : BaseApiController
             return NoContent();
         }
         return BadRequest("Failed to delete product");
+    }
+    [HttpGet("brands")]
+    public async Task<ActionResult<IReadOnlyList<string>>> GetBrands()
+    {
+        var brands = await unitOfWork.ProductsRepository.GetBrandsAsync();
+        if (!brands.Any())
+        {
+            return NotFound("No brands found");
+        }
+        return Ok(brands);
+    }
+    [HttpGet("types")]
+    public async Task<ActionResult<IReadOnlyList<string>>> GetTypes()
+    {
+        var types = await unitOfWork.ProductsRepository.GetTypesAsync();
+        if (!types.Any())
+        {
+            return NotFound("No types found");
+        }
+        return Ok(types);
     }
 }
