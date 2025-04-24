@@ -1,4 +1,6 @@
 using API.Extensions;
+using Infrastructure.Data;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -23,5 +25,23 @@ if (app.Environment.IsDevelopment())
 }
 
 app.MapControllers();
+
+try
+{
+    using var scope = app.Services.CreateScope();
+    var services = scope.ServiceProvider;
+    var context = services.GetRequiredService<StoreContext>();
+    var logger = services.GetRequiredService<ILogger<Program>>();
+    await context.Database.MigrateAsync();
+    logger.LogInformation("Applying migrations...");
+    await StoreContextSeed.SeedAsync(context);
+    logger.LogInformation("Database seeded successfully.");
+}
+catch (Exception ex)
+{
+    var logger = app.Services.GetRequiredService<ILogger<Program>>();
+    logger.LogError(ex, "An error occurred during migration or seeding.");
+    throw;
+}
 
 app.Run();

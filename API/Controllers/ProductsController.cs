@@ -26,7 +26,7 @@ public class ProductsController(IUnitOfWork unitOfWork) : BaseApiController
     [HttpPost]
     public async Task<ActionResult<Product>> CreateProduct(Product product)
     {
-        await unitOfWork.ProductsRepository.CreateProductAsync(product);
+        unitOfWork.ProductsRepository.AddProduct(product);
         if (await unitOfWork.Complete())
         {
             return CreatedAtAction(nameof(GetProduct), new { id = product.Id }, product);

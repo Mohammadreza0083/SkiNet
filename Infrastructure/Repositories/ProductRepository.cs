@@ -7,7 +7,7 @@ namespace Infrastructure.Repositories;
 
 public class ProductRepository(StoreContext context) : IProductRepository
 {
-    public async Task<IEnumerable<Product>> GetProductsAsync()
+    public async Task<IReadOnlyList<Product>> GetProductsAsync()
     {
         return await context.Products.ToListAsync();
     }
@@ -18,7 +18,7 @@ public class ProductRepository(StoreContext context) : IProductRepository
                throw new InvalidOperationException("Product not found");
     }
 
-    public async Task<Product?> CreateProductAsync(Product product)
+    public void AddProduct(Product product)
     {
         if (product == null || string.IsNullOrEmpty(product.Name))
         {
@@ -28,8 +28,7 @@ public class ProductRepository(StoreContext context) : IProductRepository
         {
             throw new Exception("Product with this name already exists");
         }
-        await context.Products.AddAsync(product);
-        return product;
+        context.Products.Add(product);
     }
 
     public void UpdateProduct(Product product)
