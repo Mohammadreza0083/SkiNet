@@ -7,9 +7,10 @@ namespace API.Controllers;
 public class ProductsController(IUnitOfWork unitOfWork) : BaseApiController
 {
     [HttpGet]
-    public async Task<ActionResult<IReadOnlyList<Product>>> GetProducts()
+    public async Task<ActionResult<IReadOnlyList<Product>>> GetProducts(string? brand, 
+        string? type, string? sort)
     {
-        var products = await unitOfWork.ProductsRepository.GetProductsAsync();
+        var products = await unitOfWork.ProductsRepository.GetProductsAsync(brand, type, sort);
         if (!products.Any())
         {
             return NotFound("No products found");
