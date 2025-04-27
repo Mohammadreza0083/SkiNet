@@ -10,7 +10,7 @@ public class ProductsController(IUnitOfWork unitOfWork) : BaseApiController
     public async Task<ActionResult<IReadOnlyList<Product>>> GetProducts(string? brand, 
         string? type, string? sort)
     {
-        var products = await unitOfWork.ProductsRepository.GetProductsAsync(brand, type, sort);
+        var products = await unitOfWork.Repository<Product>().ListAllAsync();
         if (!products.Any())
         {
             return NotFound("No products found");
@@ -20,14 +20,14 @@ public class ProductsController(IUnitOfWork unitOfWork) : BaseApiController
     [HttpGet("{id}")]
     public async Task<ActionResult<Product>> GetProduct(int id)
     {
-        var product = await unitOfWork.ProductsRepository.GetProductByIdAsync(id);
+        var product = await unitOfWork.Repository<Product>().GetByIdAsync(id);
         return Ok(product);
     }
 
     [HttpPost]
     public async Task<ActionResult<Product>> CreateProduct(Product product)
     {
-        unitOfWork.ProductsRepository.AddProduct(product);
+        unitOfWork.Repository<Product>().Add(product);
         if (await unitOfWork.Complete())
         {
             return CreatedAtAction(nameof(GetProduct), new { id = product.Id }, product);
@@ -41,7 +41,7 @@ public class ProductsController(IUnitOfWork unitOfWork) : BaseApiController
         {
             return BadRequest("Product ID mismatch");
         }
-        unitOfWork.ProductsRepository.UpdateProduct(product);
+        unitOfWork.Repository<Product>().Update(product);
         if (await unitOfWork.Complete())
         {
             return NoContent();
@@ -51,8 +51,8 @@ public class ProductsController(IUnitOfWork unitOfWork) : BaseApiController
     [HttpDelete("{id:int}")]
     public async Task<ActionResult> DeleteProduct(int id)
     {
-        var product = await unitOfWork.ProductsRepository.GetProductByIdAsync(id);
-        unitOfWork.ProductsRepository.DeleteProduct(product);
+        var product = await unitOfWork.Repository<Product>().GetByIdAsync(id);
+        unitOfWork.Repository<Product>().Delete(product);
         if (await unitOfWork.Complete())
         {
             return NoContent();
@@ -62,21 +62,15 @@ public class ProductsController(IUnitOfWork unitOfWork) : BaseApiController
     [HttpGet("brands")]
     public async Task<ActionResult<IReadOnlyList<string>>> GetBrands()
     {
-        var brands = await unitOfWork.ProductsRepository.GetBrandsAsync();
-        if (!brands.Any())
-        {
-            return NotFound("No brands found");
-        }
-        return Ok(brands);
+        // Assuming GetBrandsAsync returns a list of brand names
+        // TODO: This method should be implemented in the repository
+        return Ok();
     }
     [HttpGet("types")]
     public async Task<ActionResult<IReadOnlyList<string>>> GetTypes()
     {
-        var types = await unitOfWork.ProductsRepository.GetTypesAsync();
-        if (!types.Any())
-        {
-            return NotFound("No types found");
-        }
-        return Ok(types);
+        // Assuming GetTypesAsync returns a list of type names
+        // TODO: This method should be implemented in the repository
+        return Ok();
     }
 }
