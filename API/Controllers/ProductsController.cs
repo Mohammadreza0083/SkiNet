@@ -1,5 +1,6 @@
 ﻿using Core.Entities;
 using Core.Interfaces;
+using Core.Specification;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers;
@@ -10,7 +11,8 @@ public class ProductsController(IUnitOfWork unitOfWork) : BaseApiController
     public async Task<ActionResult<IReadOnlyList<Product>>> GetProducts(string? brand, 
         string? type, string? sort)
     {
-        var products = await unitOfWork.Repository<Product>().ListAllAsync();
+        var specification = new ProductSpecification(brand, type);
+        var products = await unitOfWork.Repository<Product>().GetListWithSpecification(specification);
         if (!products.Any())
         {
             return NotFound("No products found");
@@ -27,8 +29,8 @@ public class ProductsController(IUnitOfWork unitOfWork) : BaseApiController
     [HttpPost]
     public async Task<ActionResult<Product>> CreateProduct(Product product)
     {
-        unitOfWork.Repository<Product>().Add(product);
-        if (await unitOfWork.Complete())
+        var result = unitOfWork.Repository<Product>().Add(product);
+        if (await unitOfWork.Complete() && result)
         {
             return CreatedAtAction(nameof(GetProduct), new { id = product.Id }, product);
         }
@@ -52,6 +54,7 @@ public class ProductsController(IUnitOfWork unitOfWork) : BaseApiController
     public async Task<ActionResult> DeleteProduct(int id)
     {
         var product = await unitOfWork.Repository<Product>().GetByIdAsync(id);
+        if (product == null) return NotFound("Product not found");
         unitOfWork.Repository<Product>().Delete(product);
         if (await unitOfWork.Complete())
         {

@@ -1,5 +1,4 @@
-﻿using System.ComponentModel;
-using Core.Entities;
+﻿using Core.Entities;
 using Core.Interfaces;
 using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
@@ -9,32 +8,34 @@ namespace Infrastructure.Repositories;
 public class GenericRepository<T> (StoreContext context) : IGenericRepository<T>
 where T : BaseEntity
 {
-    public async Task<T> GetByIdAsync(int id)
+    public async Task<T?> GetByIdAsync(int id)
     {
-        return await context.Set<T>().FindAsync(id) ?? 
-               throw new InvalidOperationException("Entity not found");
+        return await context.Set<T>().FindAsync(id);
     }
 
     public async Task<IReadOnlyList<T>> ListAllAsync()
     {
-        var entities = await context.Set<T>().ToListAsync();
-        return entities ?? 
-               throw new InvalidOperationException("No entities found");
+        return await context.Set<T>().ToListAsync();
     }
 
-    public void Add(T entity)
+    public async Task<T?> GetEntityWithSpecification(ISpecification<T> spec)
     {
-        if (entity == null)
-        {
-            throw new ArgumentNullException(nameof(entity), "Entity cannot be null");
-        }
-        if (Exists(entity.Id))
-        {
-            throw new WarningException("Entity already exists");
-        }
-        context.Set<T>().Add(entity);
+        return await ApplySpecification(spec).FirstOrDefaultAsync();
     }
 
+    public async Task<IReadOnlyList<T>> GetListWithSpecification(ISpecification<T> spec)
+    {
+        return await ApplySpecification(spec).ToListAsync();
+    }
+
+    public bool Add(T entity)
+    {
+        if (entity.Id is 0) return false;
+        if (Exists(entity.Id)) return false;
+        context.Set<T>().Add(entity);
+        return true;
+    }
+    
     public void Update(T entity)
     {
         context.Set<T>().Attach(entity);
@@ -49,5 +50,10 @@ where T : BaseEntity
     public bool Exists(int id)
     {
         return context.Set<T>().Any(e => e.Id == id);
+    }
+
+    private IQueryable<T> ApplySpecification(ISpecification<T> specification)
+    {
+        return SpecificationEvaluator<T>.GetQuery(context.Set<T>().AsQueryable(), specification);
     }
 }
