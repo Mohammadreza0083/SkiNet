@@ -7,4 +7,18 @@ public class BaseSpecification <T> (Expression<Func<T,bool>>? criteria) : ISpeci
 {
     protected BaseSpecification() : this(null){}
     public Expression<Func<T, bool>>? Criteria => criteria;
+
+    public Expression<Func<T, object>>? OrderBy { get; private set; }
+
+    public Expression<Func<T, object>>? OrderByDesc {get; private set;}
+
+    protected void SetOrderBy(Expression<Func<T, object>>? orderByExpression)
+    {
+        OrderBy = orderByExpression;
+    }
+    
+    protected void SetOrderByDesc(Expression<Func<T, object>>? orderByDescExpression)
+    {
+        OrderByDesc = orderByDescExpression;
+    }
 }

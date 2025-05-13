@@ -11,7 +11,7 @@ public class ProductsController(IUnitOfWork unitOfWork) : BaseApiController
     public async Task<ActionResult<IReadOnlyList<Product>>> GetProducts(string? brand, 
         string? type, string? sort)
     {
-        var specification = new ProductSpecification(brand, type);
+        var specification = new ProductSpecification(brand, type, sort);
         var products = await unitOfWork.Repository<Product>().GetListWithSpecification(specification);
         if (!products.Any())
         {

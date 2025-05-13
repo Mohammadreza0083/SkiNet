@@ -1,8 +1,25 @@
-﻿using System.Linq.Expressions;
-using Core.Entities;
+﻿using Core.Entities;
 
 namespace Core.Specification;
 
-public class ProductSpecification(string? brand, string? type) : BaseSpecification<Product>(x =>
-    (string.IsNullOrEmpty(brand) || x.Brand == brand) &&
-    (string.IsNullOrEmpty(type) || x.Type == type));
+public class ProductSpecification : BaseSpecification<Product>
+{
+    public ProductSpecification(string? brand, string? type, string? sort)
+    :base(x =>
+        (string.IsNullOrEmpty(brand) || x.Brand == brand) &&
+        (string.IsNullOrEmpty(type) || x.Type == type))
+    {
+        switch (sort)
+        {
+            case "priceAsc":
+                SetOrderBy(x => x.Price);
+                break;
+            case "priceDesc":
+                SetOrderByDesc(x => x.Price);
+                break;
+            default:
+                SetOrderBy(x => x.Name);
+                break;
+        }
+    }
+}
