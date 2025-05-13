@@ -28,6 +28,16 @@ where T : BaseEntity
         return await ApplySpecification(spec).ToListAsync();
     }
 
+    public async Task<TResult?> GetEntityWithSpecification<TResult>(ISpecification<T, TResult?> spec)
+    {
+        return await ApplySpecification(spec).FirstOrDefaultAsync();
+    }
+
+    public async Task<IReadOnlyList<TResult>> GetListWithSpecification<TResult>(ISpecification<T, TResult> spec)
+    {
+        return await ApplySpecification(spec).ToListAsync();
+    }
+
     public bool Add(T entity)
     {
         if (entity.Id is 0) return false;
@@ -55,5 +65,10 @@ where T : BaseEntity
     private IQueryable<T> ApplySpecification(ISpecification<T> specification)
     {
         return SpecificationEvaluator<T>.GetQuery(context.Set<T>().AsQueryable(), specification);
+    }
+    private IQueryable<TResult> ApplySpecification<TResult>(ISpecification<T, TResult> specification)
+    {
+        return SpecificationEvaluator<T>.GetQuery<T, TResult>(context.Set<T>()
+            .AsQueryable(), specification);
     }
 }

@@ -19,7 +19,7 @@ public class ProductsController(IUnitOfWork unitOfWork) : BaseApiController
         }
         return Ok(products);
     }
-    [HttpGet("{id}")]
+    [HttpGet("{id:int}")]
     public async Task<ActionResult<Product>> GetProduct(int id)
     {
         var product = await unitOfWork.Repository<Product>().GetByIdAsync(id);
@@ -65,15 +65,13 @@ public class ProductsController(IUnitOfWork unitOfWork) : BaseApiController
     [HttpGet("brands")]
     public async Task<ActionResult<IReadOnlyList<string>>> GetBrands()
     {
-        // Assuming GetBrandsAsync returns a list of brand names
-        // TODO: This method should be implemented in the repository
-        return Ok();
+        var specification = new BrandListSpecification();
+        return Ok(await unitOfWork.Repository<Product>().GetListWithSpecification(specification));
     }
     [HttpGet("types")]
     public async Task<ActionResult<IReadOnlyList<string>>> GetTypes()
     {
-        // Assuming GetTypesAsync returns a list of type names
-        // TODO: This method should be implemented in the repository
-        return Ok();
+        var specification = new TypeListSpecification();
+        return Ok(await unitOfWork.Repository<Product>().GetListWithSpecification(specification));
     }
 }

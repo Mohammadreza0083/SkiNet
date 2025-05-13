@@ -9,6 +9,8 @@ where T : BaseEntity
     Task<IReadOnlyList<T>> ListAllAsync();
     Task<T?> GetEntityWithSpecification(ISpecification<T> spec);
     Task<IReadOnlyList<T>> GetListWithSpecification(ISpecification<T> spec);
+    Task<TResult?> GetEntityWithSpecification<TResult>(ISpecification<T, TResult?> spec);
+    Task<IReadOnlyList<TResult>> GetListWithSpecification<TResult>(ISpecification<T, TResult> spec);
     bool Add(T entity);
     void Update(T entity);
     void Delete(T entity);
