@@ -16,6 +16,10 @@ where T : BaseEntity
             query = query.OrderByDescending(specification.OrderByDesc);
         if (specification.IsDistinct)
             query = query.Distinct();
+        if (specification.IsPagingEnable)
+        {
+            query = query.Skip(specification.Skip).Take(specification.Take);
+        }
         return query;
     }
     public static IQueryable<TResult> GetQuery<TSpec, TResult>(IQueryable<T> query, 
@@ -32,6 +36,10 @@ where T : BaseEntity
             selectQuery = query.Select(specification.Select);
         if (specification.IsDistinct && selectQuery is not null)
             selectQuery = selectQuery.Distinct();
+        if (specification.IsPagingEnable && selectQuery is not null)
+        {
+            selectQuery = selectQuery.Skip(specification.Skip).Take(specification.Take);
+        }
         return selectQuery ?? query.Cast<TResult>();
     }
 }

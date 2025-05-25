@@ -8,16 +8,12 @@ namespace API.Controllers;
 public class ProductsController(IUnitOfWork unitOfWork) : BaseApiController
 {
     [HttpGet]
-    public async Task<ActionResult<IReadOnlyList<Product>>> GetProducts(string? brand, 
-        string? type, string? sort)
+    public async Task<ActionResult<IReadOnlyList<Product>>> GetProducts
+        ([FromQuery]ProductSpecParams productSpecParams)
     {
-        var specification = new ProductSpecification(brand, type, sort);
-        var products = await unitOfWork.Repository<Product>().GetListWithSpecification(specification);
-        if (!products.Any())
-        {
-            return NotFound("No products found");
-        }
-        return Ok(products);
+        var specification = new ProductSpecification(productSpecParams);
+        return await CreatePageResult(unitOfWork.Repository<Product>(),
+            specification,productSpecParams.PageIndex, productSpecParams.PageSize);
     }
     [HttpGet("{id:int}")]
     public async Task<ActionResult<Product>> GetProduct(int id)
