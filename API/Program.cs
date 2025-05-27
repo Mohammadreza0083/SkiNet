@@ -1,4 +1,5 @@
 using API.Extensions;
+using API.Middlewares;
 using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 
@@ -24,6 +25,11 @@ if (app.Environment.IsDevelopment())
     app.MapOpenApi();
 }
 
+app.UseMiddleware<ExceptionMiddleware>();
+app.UseCors(x => x
+    .AllowAnyHeader()
+    .AllowAnyMethod()
+    .WithOrigins("http://localhost:4200", "https://localhost:4200"));
 app.MapControllers();
 
 try

@@ -18,6 +18,7 @@ public static class ApplicationServiceExtensions
         services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
         services.AddScoped<IProductRepository, ProductRepository>();
         services.AddScoped<IUnitOfWork, UnitOfWork>();
+        services.AddCors();
         return services;
     }
 }
